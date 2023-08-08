@@ -1,0 +1,34 @@
+create table actors (id integer primary key, 
+    name text,
+    oscar_noms integer,
+    oscar_wins integer,
+    golden_globes_noms integer,
+    golden_globes_wins integer,
+    worldwide_box_office_gross integer,
+    marital_status text,
+    spouse_id integer);
+ 
+insert into actors values (1, "arnold schwarzenegger", 0, 0, 2, 1, 4000000000, "single", 0);
+insert into actors values (2, "jennifer aniston", 0, 0, 5, 1, 1655186680, "single", 0);
+insert into actors values (3, "meryl streep", 21, 3, 33, 9, 2982447280, "single", 0);
+insert into actors values (4, "jennifer garner", 0, 0, 4, 1, 1147492607, "single", 0);
+insert into actors values (5, "drew barrymore", 0, 0, 3, 1, 1686197957, "single", 0);
+insert into actors values (6, "kristen bell", 0, 0, 1, 0, 611250146, "married", 0);
+insert into actors values (7, "daniel day lewis", 6, 3, 8, 2, 752578690, "married", 0);
+insert into actors values (8, "jane fonda", 7, 2, 16, 7,  682676120, "single", 0);
+insert into actors values (9, "robert de niro", 7, 2, 11, 1, 3400000000, "single", 0);
+insert into actors values (10, "maggie smith", 6, 2, 12, 3, 7089356587, "single", 0);
+insert into actors values (11, "denzel washington", 9, 2, 10, 2, 4081390106, "married", 0);
+
+create table movies (id integer primary key, title text, actor_id1 integer, actor_id2 integer);
+
+insert into movies (title, actor_id1)
+values ("the devil wears prada", 3);
+insert into movies (title, actor_id1) values ("along came polly", 2);
+insert into movies (title, actor_id1, actor_id2) values ("men of honor", 9, 11); insert into movies (title, actor_id1, actor_id2) values ("california suite", 10, 8);
+insert into movies (title, actor_id1) values ("13 going on 30", 4);
+
+select movies.title as movie_title, a.name as actor_1, b.name as actor_2 from movies
+    left outer join actors a on actor_id1 = a.id
+    left outer join actors b on actor_id2 = b.id
+    
