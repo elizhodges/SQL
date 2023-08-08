@@ -1,0 +1,51 @@
+CREATE TABLE inventory (id INTEGER PRIMARY KEY, item TEXT, "ring size" INTEGER, price INTEGER, "number in stock" INTEGER, "number sold last month" INTEGER);
+
+INSERT INTO inventory VALUES (1,"turquoise baguette", 7, 35, 10, 8);
+INSERT INTO inventory VALUES (2, "turquoise baguette", 7.5, 35, 10, 10);
+INSERT INTO inventory VALUES (3, "turquoise baguette",8, 35, 9, 11); 
+INSERT INTO inventory VALUES (4,"turquoise baguette", 8.5, 35, 9, 9);
+INSERT INTO inventory VALUES (5, "turquoise baguette", 9, 35, 5, 12);
+INSERT INTO inventory VALUES (6, "turquoise baguette", 10, 35, 8, 12);
+INSERT INTO inventory VALUES (7, "onyx marquise", 6.5, 25, 5, 5);
+INSERT INTO inventory VALUES (8, "onyx marquise", 7, 25, 6, 6);
+INSERT INTO inventory VALUES (9, "onyx marquise", 7.5, 25, 7, 8);
+INSERT INTO inventory VALUES (10, "onyx marquise", 8, 25, 5, 4);
+INSERT INTO inventory VALUES (11, "onyx marquise", 8.5, 25, 2, 5);
+INSERT INTO inventory VALUES (12, "onyx marquise", 9, 25, 5, 6);
+INSERT INTO inventory VALUES (13, "onyx marquise", 9.5, 25, 2, 3);
+INSERT INTO inventory VALUES (14, "onyx marquise", 10, 25, 4, 3);
+INSERT INTO inventory VALUES (15, "emerald princess", 6, 40, 5, 5);
+INSERT INTO inventory VALUES (16, "emerald princess", 6.5, 40, 4, 6);
+INSERT INTO inventory VALUES (17, "emerald princess", 7, 40, 4, 6);
+INSERT INTO inventory VALUES (18, "emerald princess", 7.5, 40, 5, 5);
+INSERT INTO inventory VALUES (19, "emerald princess", 8, 40, 6, 4);
+INSERT INTO inventory VALUES (20, "emerald princess", 8.5, 40, 7, 3);
+INSERT INTO inventory VALUES (21, "emerald princess", 9, 40, 8, 2);
+INSERT INTO inventory VALUES (22, "emerald princess", 9.5, 40, 7, 3);
+INSERT INTO inventory VALUES (23, "emerald princess", 10, 40, 8, 2);
+INSERT INTO inventory VALUES (24, "ruby rose", 6.5, 45, 10, 2);
+INSERT INTO inventory VALUES (25, "ruby rose", 7, 45, 7, 4);
+INSERT INTO inventory VALUES (26, "ruby rose", 7.5, 45, 6, 5);
+INSERT INTO inventory VALUES (27, "ruby rose", 8, 45, 8, 3);
+INSERT INTO inventory VALUES (28, "ruby rose", 8.5, 45, 5, 7);
+INSERT INTO inventory VALUES (29, "ruby rose", 9, 45, 6, 4);
+INSERT INTO inventory VALUES (30, "ruby rose", 9.5, 45, 5, 6);
+INSERT INTO inventory VALUES (31, "ruby rose", 10, 45, 5, 5);
+INSERT INTO inventory VALUES (32, "topaz brilliant", 6, 40, 6, 4);
+INSERT INTO inventory VALUES (33, "topaz brilliant", 6.5, 40, 7, 3);
+INSERT INTO inventory VALUES (34, "topaz brilliant", 7, 40, 5, 5);
+INSERT INTO inventory VALUES (35, "topaz brilliant", 7.5, 40, 6, 4);
+INSERT INTO inventory VALUES (36, "topaz brilliant", 8, 40, 3, 7);
+INSERT INTO inventory VALUES (37, "topaz brilliant", 8.5, 40, 4, 6);
+INSERT INTO inventory VALUES (38, "topaz brilliant", 9, 40, 2, 8);
+INSERT INTO inventory VALUES (39, "topaz brilliant", 9.5, 40, 5, 5);
+INSERT INTO inventory VALUES (40, "topaz brilliant", 10, 40, 4, 6);
+
+SELECT * FROM inventory ORDER BY price;
+SELECT SUM("number sold last month") FROM inventory;
+SELECT SUM("number sold last month") FROM inventory WHERE "ring size" = 8;
+SELECT SUM("number sold last month") FROM inventory WHERE "ring size" = 10;
+
+SELECT "ring size", SUM("number sold last month") FROM inventory GROUP BY "ring size";
+
+SELECT item, SUM("number sold last month") FROM inventory GROUP BY item;
