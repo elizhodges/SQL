@@ -1,0 +1,49 @@
+/In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data/
+
+/getting acquainted with the data sets/
+select * from bit_db.jansales
+
+select * from customers
+
+/determining the number of orders placed in January/
+select count(orderID) from bit_db.jansales
+where length(orderID) = 6
+and orderID <> 'Order ID'
+
+
+/determining how many of the January orders were for an iPhone/
+select count(orderID) from bit_db.jansales
+where product = 'iPhone'
+and length(orderID) = 6
+and orderID <> 'Order ID'
+
+/selecting all customer accounts for orders placed in february by joining two tables/
+select distinct acctnum from bit_db.customers
+inner join bit_db.febsales
+on febsales.orderID = customers.order_id
+where length(orderID) = 6
+and orderID <> 'Order ID'
+
+/determining which January product was the least expensive, and what its price is/
+select distinct product, price from bit_db.jansales 
+where price in(select min(price) from BIT_DB.JanSales)
+
+
+/determining the total revenue for each product sold in January/
+select sum(quantity)*price as revenue,
+product from bit_db.jansales 
+group by product
+
+/determining which products were sold in February at 548 Lincoln St in Seattle, how many of each sold, and total revenue/
+select product, sum(quantity), sum(quantity)*price as revenue
+from BIT_DB.FebSales
+where location = '548 Lincoln St, Seattle, WA 98101'
+group by product
+
+/determining how many customers ordered more than two products at a time in February, and average spent for those customers/
+select count(distinct customers.acctnum), avg(quantity*price) as average_spent from bit_db.febsales
+left join bit_db.customers
+on febsales.orderid = customers.order_id
+where febsales.quantity >2
+and length(orderid) = 6
+and orderid <> 'Order ID' 
