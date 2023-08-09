@@ -47,3 +47,35 @@ on febsales.orderid = customers.order_id
 where febsales.quantity >2
 and length(orderid) = 6
 and orderid <> 'Order ID' 
+
+
+/employing data filtering with date ranges and specific dates/
+select orderdate from bit_db.febsales 
+where orderdate between '02/13/19' and '02/18/19'
+
+select location 
+from bit_db.febsales
+where orderdate = '02/18/19 01:35'
+
+select location 
+from bit_db.febsales
+where orderdate like '02/18/19%'
+
+select sum(quantity) 
+from bit_db.febsales
+where orderdate like '2/18/19%'
+
+/employing data filtering with product and price/
+select distinct product 
+from bit_db.febsales
+where product like '%batteries%'
+
+select distinct product, price 
+from bit_db.febsales
+where price like '%.99'
+
+/listing all products sold in february in LA, nicluding how many of each were sold/
+select distinct product, sum(quantity) from bit_db.febsales 
+where location like '%Los Angeles%'
+group by product
+
