@@ -88,5 +88,30 @@ where average_safety_rating >= 4.0
 
 
 
+** Now, I'm using window functions to display both safety ratings (one from each inspector) as well as the average rating for the street **
+select street, safetyrating, 
+avg(safetyrating) over (partition by street) as "average_safety_rating"
+from citybikelanes
+
+select street, safetyrating, 
+avg(safetyrating) over (partition by street) as "average_safety_rating"
+from citybikelanes
+where street = '2nd'
+
+
+** Next, I continued with window funcitons to create a list of all of the bike lanes, both safety ratings for each lane (two inspectors), average safety rating for each lane, and a recommendation label ("remove", "leave as-is", or "improvements needed") based on average safety rating **
+select street, safetyrating, 
+avg(safetyrating) over (partition by street) as "average_safety_rating",
+case when avg(safetyrating) over (partition by street) >= 4 then "Leave As Is"
+when avg(safetyrating) over (partition by street) <= 2.5 then "Remove"
+else "Improvements Needed"
+end as "Recommendation"
+from citybikelanes
+
+
+
+
+
+
 
 
