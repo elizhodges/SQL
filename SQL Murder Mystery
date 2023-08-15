@@ -1,0 +1,79 @@
+SQL murder mystery
+
+**First, I found the names of the tables in the database**
+SELECT name 
+  FROM sqlite_master
+ where type = 'table'
+
+**Next, I searched the crime scene reports for murders in SQL city**
+select date, type, description, city 
+from crime_scene_report
+where type = "murder" and city = "SQL City"
+
+**Next, I used the witness information from the crime scene report to find the two witnesses, as seen on security cam.One lives in the last house on "Northwestern Drive," and the second is named Annabel and lives on Franklin Ave.**
+select * from person
+where address_street_name like "%Northwestern%" 
+order by address_number desc
+limit 1
+
+select * from person
+where address_street_name like "%Franklin%" 
+and name like "%Annabel%"
+
+
+**Next, I queried the interview table (using a left join to include names from the person table) for the statements of the two witnesses.**
+select person.id, person.name, interview.transcript from interview
+left join person 
+on interview.person_id = person.id
+where name = "Morty Schapiro" or name = "Annabel Miller"
+
+
+    1st witness is morty schapiro - ID 14887, license 118009, 4919 northwestern drive
+	    I heard a gunshot and then saw a man run out. He had a "Get Fit Now Gym" bag. The membership number on the bag started with "48Z". Only gold members have those bags. The man got into a car with a plate that included "H42W".
+	
+    2nd witness is annabel miller - ID 16371, license 490173, 103 franklin ave
+	    I saw the murder happen, and I recognized the killer from my gym when I was working out last week on January the 9th.
+
+
+**Next, I queried the Get Fit Now databases using the witness clues - searching for Gold members who went to the gym on january 9th and have a member ID starting in 48z. I found two results.** 
+select get_fit_now_member.name, get_fit_now_member.membership_status, get_fit_now_member.id, get_fit_now_check_in.check_in_date, get_fit_now_check_in.check_in_time, get_fit_now_check_in.check_out_time from get_fit_now_check_in 
+left join get_fit_now_member 
+on get_fit_now_check_in.membership_id = get_fit_now_member.id
+where get_fit_now_check_in.check_in_date = 20180109
+and get_fit_now_member.membership_status = "gold"
+and get_fit_now_member.id like "48z%"
+
+
+**Finally, I searched the license data to determine the final suspect.**
+select * from drivers_license
+left join person 
+on drivers_license.id = person.license_id
+where person.name like "%Germuska" or person.name = "Jeremy Bowers"
+
+
+**I was told I solved the murder, but was met with another challenge - to find out who's behind it. I began by querying interview transcripts for the killer's interview.**
+select person.id, person.name, interview.transcript from interview
+left join person 
+on interview.person_id = person.id
+where name = "Jeremy Bowers"
+
+
+**I used the information from his interview about the woman who hired him to search the drivers license databases for somone who fit the description. This led to three suspects (Miranda Priestly, Regina George, Red Korb)**
+select person.name, person.ssn, drivers_license.id, drivers_license.height, drivers_license.eye_color, drivers_license.hair_color, drivers_license.gender, drivers_license.plate_number, drivers_license.car_model, drivers_license.car_make from drivers_license
+left join person
+on drivers_license.id = person.license_id
+where car_make like "Tesla" 
+and car_model like "Model S"
+and hair_color = "red"
+and drivers_license.gender = "female"
+
+
+**Finally, I searched the Facebook Event Checkin table to see which suspect had attended the Symphony 3 times in December of 2017, which led me to our final suspect - Miranda Priestly**
+select * from facebook_event_checkin
+left join person 
+on facebook_event_checkin.person_id = person.id
+where person.name = "Miranda Priestly" or person.name = "Regina George" or person.name = "Red Korb"
+
+
+
+
