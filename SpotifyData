@@ -19,27 +19,46 @@ tempo decimal(6,3) NOT NULL,
 duration_ms integer NOT NULL,
 time_signature integer NOT NULL )
 
+
 ** Next, I got familiar with the newly input data with a general select query **
 select * from spotifydata
+
 
 ** I then determined the top 10 songs and corresponding artists based on popularity **
 select artist_name, track_name, popularity from spotifydata 
 order by popularity desc
 limit 10
 
+
 ** Next, I determined which artists released the 5 longest tracks in the top 50 **
 select artist_name, track_name from spotifydata
 order by duration_ms desc
 limit 5
 
+
 ** I then used SQL to calculate the average danceability of the 10 most popular songs **
 select sum(danceability)/10 from spotifydata 
 where id >=1 and id <=10
 
-** Finally, I determined the average popularity, danceability, and energy of each artist **
+
+** Next, I determined the average popularity, danceability, and energy of each artist **
 select artist_name, avg(popularity), avg(danceability), avg(energy) 
 from spotifydata 
 group by artist_name
+
+
+** Next, I used a CTE to create a temporary table in order to determine and display the name and popularity of every artist with an average popularity of 90 or above and tagging them as "Top Star" **
+with topstar as(
+select artist_name, avg(spotifydata.popularity) as average_popularity
+from spotifydata 
+group by artist_name)
+
+select artist_name, average_popularity, 'Top Star' as tag from topstar
+where average_popularity >= 90
+order by average_popularity desc
+
+
+
 
 
 
