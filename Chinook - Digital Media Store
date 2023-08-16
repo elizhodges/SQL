@@ -1,0 +1,119 @@
+** This project was completed using a dataset "Chinook", which represents a digital media store and includes tables for artists, albums, media tracks, invoices, and customers. To familiarize with the data, I first did a few simple queries **
+**First, I determined how many tracks were in the playlists in total**
+select count(trackid)from chinook.playlist_track
+
+
+**Next, I joined the invoices and customers tables to show order information along with the customer name and contact information**
+select i.invoiceid, i.customerid, i.invoicedate, c.firstname, c.lastname, c.email from chinook.invoices i
+left join chinook.customers c
+on i.customerid = c.customerid
+
+
+**Next, I made a list of international customers**
+select c.firstname, c.lastname, c.country from chinook.customers c
+where country is not "USA"
+order by country asc
+
+
+**This aggregated data table shows the invoices for customers fromm Brazil, ordered by invoice date and alphabetically by last name within**
+select c.firstname, c.lastname, i.invoiceid, i.invoicedate, c.country 
+from chinook.customers c
+left join chinook.invoices i
+on c.customerid = i.customerid
+where c.country = "Brazil"
+order by i.invoicedate asc, c.lastname asc
+
+
+** Next, I determined which employees work in sales**
+select e.employeeid, e.firstname, e.lastname, e.title from chinook.employees e
+where e.title like '%sales%'
+
+
+** I then found a list of unique billing countries from the invoice table **
+select distinct c.country from chinook.customers c
+order by country asc
+
+
+** Next, I displayed a table of invoices by sales agent by pulling from 3 tables, grouped by employee ID and by invoice date within each employee set**
+select e.employeeid, e.firstname as employeefirstname, e.lastname as employeelastname, i.invoiceid, i.invoicedate, i.total from chinook.employees e
+left join chinook.customers c
+on e.employeeid = c.supportrepid
+left join chinook.invoices i
+on i.customerid = c.customerid
+where i.invoiceid is not null
+order by e.employeeid asc, i.invoicedate asc
+
+
+** I determined the total amount made in sales in 2009, 2010, and 2011**
+select sum(i.total) from chinook.invoices i
+where i.invoicedate like '2009%'
+
+select sum(i.total) from chinook.invoices i
+where i.invoicedate like '2010%'
+
+select sum(i.total) from chinook.invoices i
+where i.invoicedate like '2011%' 
+
+
+** Next, I wrote a query to include the purchased track name, composer, and cost with each invoice line ID **
+select i.invoiceid, i.invoicedate, t.name, t.composer, i.total as 'cost' 
+from chinook.invoices i 
+left join chinook.invoice_items it
+on i.invoiceid = it.invoiceid
+left join chinook.tracks t
+on it.trackid = t.trackid
+order by i.invoicedate asc, t.name asc
+
+
+** Next, I wrote a query to display total sales made by each sales agent **
+select e.employeeid, e.firstname as employeefirstname, e.lastname as employeelastname, sum(i.total) from chinook.employees e
+left join chinook.customers c
+on e.employeeid = c.supportrepid
+left join chinook.invoices i
+on i.customerid = c.customerid
+where i.invoiceid is not null
+group by e.employeeid
+
+
+** I then determined which sales agent made the most money in 2009 **
+select e.employeeid, e.firstname as employeefirstname, e.lastname as employeelastname, sum(i.total) as totalsales from chinook.employees e
+left join chinook.customers c
+on e.employeeid = c.supportrepid
+left join chinook.invoices i
+on i.customerid = c.customerid
+where i.invoiceid is not null
+and i.invoicedate like '2009%'
+group by e.employeeid
+order by totalsales desc
+limit 1
+
+
+** Next, I wrote a query to show all tracks, as well as the album name, artist, media type, and genre **
+select t.name as 'track_title', ar.name as 'artist', a.title as 'albumtitle', g.name as 'genre', m.name as 'mediatype' from chinook.tracks t
+left join chinook.albums a
+on t.albumid = a.albumid
+left join chinook.artists ar
+on a.artistid = ar.artistid
+left join chinook.genres g
+on t.genreid = g.genreid
+left join chinook.media_types m 
+on t.mediatypeid = m.mediatypeid 
+order by g.name asc, t.name asc
+
+
+
+** Next, I queried all of the tracks included in the '90s music playlist' by aggregating data from six tables **
+select t.name as 'track_title', ar.name as 'artist', a.title as 'albumtitle', g.name as 'genre', p.name as 'playlist' from chinook.tracks t
+left join chinook.albums a
+on t.albumid = a.albumid
+left join chinook.artists ar
+on a.artistid = ar.artistid
+left join chinook.genres g
+on t.genreid = g.genreid
+left join chinook.playlist_track pt
+on t.trackid = pt.trackid
+left join chinook.playlists p
+on pt.playlistid = p.playlistid
+where p.name like '%90%'
+order by t.name asc
+
