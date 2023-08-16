@@ -117,3 +117,11 @@ on pt.playlistid = p.playlistid
 where p.name like '%90%'
 order by t.name asc
 
+
+** Next, I wrote a query to determine how many albums each artist has released in the digital media store and listed them from highest number of albums to lowest. **
+select ar.name as 'artist', count(al.albumid) as 'numberofalbums' from chinook.albums al
+left join chinook.artists ar
+on al.artistid = ar.artistid 
+group by al.artistid
+order by numberofalbums desc
+
